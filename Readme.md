@@ -19,15 +19,15 @@ O objetivo deste playbook é documentar a forma e as possibilidades de uso da ap
 O Kafka Rest é um proxy parte do ecossistema da Confluent, que pode ser executado independentemente e fornece endpoints para integrações através de interfaces RESTful.
 Com o proxy conseguimos produzir e consumir mensagens além de verificar as configurações do cluster e administrar o suas configurações.
 
-![Grafico de uso kafka](img/server.PNG)
+![Grafico de uso kafka](img/server.png)
 
 ## Modelo de arquitetura
 
-![Grafico arquitetura](img/arquitetura.PNG)
+![Grafico arquitetura](img/arquitetura.png)
 
 ## Modelo de operações disponibilizadas
 
-![Operações disponíveis](img/operations.PNG)
+![Operações disponíveis](img/operations.png)
 
 
 # Modelo de Funcionamento
@@ -44,7 +44,7 @@ java -jar kafka-rest-6.2.0-standalone.jar /opt/sysmanager/kafkarest.properties
 
 Na utilização com Schema Registry, é necessário também informar os dados para integração com o Schema Registry e o funcionamento é detalhado no diagrama abaixo:
 
-![Uso com Schema Registry](img/schema-registry.PNG)
+![Uso com Schema Registry](img/schema-registry.png)
 
 
 ## Configurações
@@ -103,12 +103,15 @@ Apesar de suportar modo distribuído, toda a comunicação é sincrona e os cons
 A Api conforme descrita acima possui muitos endpoints, é possivel configurar suas configurações de segurança e estão disponíveis na V2 e na V3
 https://docs.confluent.io/platform/current/kafka-rest/api.html
 
+//TODO
+Adicionar endpoints e documentaçoes 
+
 
 # Utilização com microserviço utilizando Quarkus e kafka
 
 ## Alternativamente podemos utilizar a integração do Quarkus com Kafka nos microserviços isoladamente
 
-![Diagrama arquitetural](img/quarkuskafka.PNG)
+![Diagrama arquitetural](img/quarkuskafka.png)
 
 # Modo de utilização
 
