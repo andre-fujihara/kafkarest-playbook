@@ -1,11 +1,3 @@
-##### Table of Contents  
-[Headers](#headers)  
-[Emphasis](#emphasis)  
-...snip...    
-<a name="headers"/>
-
-
-
 # **Kafka Rest**
 
 ## **Objetivo**
@@ -14,7 +6,7 @@ O objetivo deste playbook é documentar a forma e as possibilidades de uso da ap
 
 ## **Stack Tecnológico**
 
-- kafka
+- Kafka
 - Zookeeper
 - kafka-rest
 
@@ -147,16 +139,8 @@ curl --location --request POST 'http://localhost:8082/consumers/testgroup/instan
 
 ## Recuperar o conteúdo do tópico
 ```bash
-curl -X POST -H "Content-Type: application/json" \
---data '{"key": {"data": 1000}}' http://localhost:8082/v3/clusters/sRCFjfUiTB6aNcn7Ud-bUQ/topics/teste/records | jq
+curl --location --request GET 'http://localhost:8082/consumers/testgroup/instances/my_consumer/records' | jq
 ```
-
-## Criação de tópicos
-```bash
-curl -X POST -H "Content-Type: application/json" \
---data '{"topic_name": "teste"}' http://localhost:8082/v3/clusters/sRCFjfUiTB6aNcn7Ud-bUQ/topics | jq
-```
-
 
 # Utilização com microserviço utilizando Quarkus e kafka
 
