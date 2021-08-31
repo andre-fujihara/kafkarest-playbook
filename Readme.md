@@ -39,7 +39,6 @@ Para realizar a integração com o Apache Kafka é necessário fornecer um arqui
 java -jar kafka-rest-6.2.0-standalone.jar /opt/sysmanager/kafkarest.properties 
 ```
 
-
 ## Applicação integrada com Schema Registry
 
 Na utilização com Schema Registry, é necessário também informar os dados para integração com o Schema Registry e o funcionamento é detalhado no diagrama abaixo:
@@ -51,7 +50,7 @@ Na utilização com Schema Registry, é necessário também informar os dados pa
 
 Para configurar corretamente a integração com os outros sistemas é necessário descrever no arquivo properties pelo menos os endereços corretos do Apache Kafka e Zookeeper.
 
-```
+```properties
 id=kafka-rest-test-server
 schema.registry.url=http://localhost:8081
 zookeeper.connect=localhost:2181
@@ -102,6 +101,126 @@ Apesar de suportar modo distribuído, toda a comunicação é sincrona e os cons
 # Exemplos de utilização
 A Api conforme descrita acima possui muitos endpoints, é possivel configurar suas configurações de segurança e estão disponíveis na V2 e na V3
 https://docs.confluent.io/platform/current/kafka-rest/api.html
+
+## Listagem das informações do cluster
+
+`
+http://localhost:8082/v3/clusters
+`
+
+
+```JSON
+{
+  "kind": "KafkaClusterList",
+  "metadata": {
+    "self": "http://localhost:8082/v3/clusters",
+    "next": null
+  },
+  "data": [
+    {
+      "kind": "KafkaCluster",
+      "metadata": {
+        "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ",
+        "resource_name": "crn:///kafka=eZ6H1ZP2QrShPSyQfjn-VQ"
+      },
+      "cluster_id": "eZ6H1ZP2QrShPSyQfjn-VQ",
+      "controller": {
+        "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0"
+      },
+      "acls": {
+        "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/acls"
+      },
+      "brokers": {
+        "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers"
+      },
+      "broker_configs": {
+        "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/broker-configs"
+      },
+      "consumer_groups": {
+        "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/consumer-groups"
+      },
+      "topics": {
+        "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics"
+      },
+      "partition_reassignments": {
+        "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/-/partitions/-/reassignment"
+      }
+    }
+  ]
+}
+```
+
+## Listagem de informações de um dos broker
+
+`
+http://localhost:8082/v3/clusters/<broker-id>/brokers/0
+`
+
+```JSON
+{
+  "kind": "KafkaBroker",
+  "metadata": {
+    "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0",
+    "resource_name": "crn:///kafka=eZ6H1ZP2QrShPSyQfjn-VQ/broker=0"
+  },
+  "cluster_id": "eZ6H1ZP2QrShPSyQfjn-VQ",
+  "broker_id": 0,
+  "host": "andre-ubuntu",
+  "port": 9092,
+  "rack": null,
+  "configs": {
+    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0/configs"
+  },
+  "partition_replicas": {
+    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0/partition-replicas"
+  }
+}
+```
+
+## Listagem de informações de um dos broker
+
+`
+http://localhost:8082/v3/clusters/<broker-id>/brokers/0
+`
+
+```JSON
+{
+  "kind": "KafkaBroker",
+  "metadata": {
+    "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0",
+    "resource_name": "crn:///kafka=eZ6H1ZP2QrShPSyQfjn-VQ/broker=0"
+  },
+  "cluster_id": "eZ6H1ZP2QrShPSyQfjn-VQ",
+  "broker_id": 0,
+  "host": "andre-ubuntu",
+  "port": 9092,
+  "rack": null,
+  "configs": {
+    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0/configs"
+  },
+  "partition_replicas": {
+    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0/partition-replicas"
+  }
+}
+```
+
+
+## Informações das réplicas do broker
+
+`
+http://localhost:8082/v3/clusters/<broker-id>/0/partition-replicas
+`
+
+```JSON
+{
+    "kind": "KafkaReplicaList",
+    "metadata": {
+        "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0/partition-replicas",
+        "next": null
+    },
+    "data": []
+}
+```
 
 ## Criação de tópicos
 ```bash
