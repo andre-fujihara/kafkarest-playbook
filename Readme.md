@@ -1,3 +1,11 @@
+##### Table of Contents  
+[Headers](#headers)  
+[Emphasis](#emphasis)  
+...snip...    
+<a name="headers"/>
+
+
+
 # **Kafka Rest**
 
 ## **Objetivo**
@@ -12,7 +20,7 @@ O objetivo deste playbook é documentar a forma e as possibilidades de uso da ap
 
 ## Premissas 
 
-- *Kafka broker* e *Zookeeper* configurados corretamente para integração com o *kafka-rest*
+- **Kafka broker** e **Zookeeper** configurados corretamente para integração com o **Kafka Rest**
 
 ## Conceitos 
 
@@ -35,9 +43,9 @@ Com o proxy conseguimos produzir e consumir mensagens além de verificar as conf
 ## Applicação isolada para integrações com Apache Kafka
 
 Para realizar a integração com o Apache Kafka é necessário fornecer um arquivo de configurações properties com os campos necessários para a correta comunicação no formato:
-`
+```
 java -jar kafka-rest-6.2.0-standalone.jar /opt/sysmanager/kafkarest.properties 
-`
+```
 
 
 ## Applicação integrada com Schema Registry
@@ -103,8 +111,51 @@ Apesar de suportar modo distribuído, toda a comunicação é sincrona e os cons
 A Api conforme descrita acima possui muitos endpoints, é possivel configurar suas configurações de segurança e estão disponíveis na V2 e na V3
 https://docs.confluent.io/platform/current/kafka-rest/api.html
 
-//TODO
-Adicionar endpoints e documentaçoes 
+## Criação de tópicos
+```bash
+curl -X POST -H "Content-Type: application/json" \
+--data '{"topic_name": "teste"}' http://localhost:8082/v3/clusters/sRCFjfUiTB6aNcn7Ud-bUQ/topics | jq
+```
+
+## Descrição do tópico
+```bash
+curl --silent -X GET http://localhost:8082/v3/clusters/sRCFjfUiTB6aNcn7Ud-bUQ/topics/teste | jq
+```
+
+## Criação de consumer
+```bash
+curl --location --request POST 'http://localhost:8082/consumers/testgroup' \
+--header 'Content-Type: application/vnd.kafka.v2+json' \
+--data-raw '{
+  "name": "my_consumer",
+  "format": "binary",
+  "auto.offset.reset": "earliest",
+  "auto.commit.enable": "false"
+}'
+```
+
+## Subscripção em um tópico
+```bash
+curl --location --request POST 'http://localhost:8082/consumers/testgroup/instances/my_consumer/subscription' \
+--header 'Content-Type: application/vnd.kafka.v2+json' \
+--data-raw '{
+  "topics": [
+    "test"
+  ]
+}'
+```
+
+## Recuperar o conteúdo do tópico
+```bash
+curl -X POST -H "Content-Type: application/json" \
+--data '{"key": {"data": 1000}}' http://localhost:8082/v3/clusters/sRCFjfUiTB6aNcn7Ud-bUQ/topics/teste/records | jq
+```
+
+## Criação de tópicos
+```bash
+curl -X POST -H "Content-Type: application/json" \
+--data '{"topic_name": "teste"}' http://localhost:8082/v3/clusters/sRCFjfUiTB6aNcn7Ud-bUQ/topics | jq
+```
 
 
 # Utilização com microserviço utilizando Quarkus e kafka
@@ -117,7 +168,7 @@ Adicionar endpoints e documentaçoes
 
 ## Configuração
 É necessário configurar corretamente a integração com os serviços através de seu arquivo properties:
-```
+```properties
 mp.messaging.incoming.in.connector=smallrye-kafka
 mp.messaging.incoming.in.topic=transactions
 mp.messaging.incoming.in.value.deserializer=org.acme.model.TransactionDeserializer
@@ -132,7 +183,7 @@ mp.messaging.outgoing.out.value.serializer=io.quarkus.kafka.client.serialization
 ## Controle de transação
 O controle das mensagens pode ser sincrono ou assincrono conforme o snippet abaixo:
 
-```
+```java
 @RegisterRestClient(configKey = "transaction-service")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -152,7 +203,7 @@ public interface TransactionService {
 ## Uso para mensagens Síncronas
 As anotações de Incoming definem a fila de entrada e Outgoing a fila de saída e Blocking é importante para garantir o sincronismo.
 
-```
+```java
 @ApplicationScoped
 public class TransactionProcessor {
 
@@ -173,7 +224,7 @@ public class TransactionProcessor {
 
 ## Uso para mensagens Síncronas
 As anotações de Incoming definem a fila de entrada e Outgoing a fila de saída.
-```
+```java
 @ApplicationScoped
 public class TransactionProcessor {
 
