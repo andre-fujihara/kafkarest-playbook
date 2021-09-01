@@ -277,38 +277,24 @@ http://localhost:8082/topics/topicName | jq
 
 ```
 
-
 ## Recuperar o conteúdo do consumidor
 
-
-`
-curl --location --request GET 'http://localhost:8082/consumers/testgroup/instances/consumerName/records' \
---header 'Accept: application/vnd.kafka.json.v2+json'
-`
+```bash
+curl -X GET -H 'Accept: application/vnd.kafka.json.v2+json' \
+ 'http://localhost:8082/consumers/testgroup/instances/consumerName/records'
+```
 
 ### Resposta
 ```JSON
 [
   {
-    "topic": "test",
-    "key": "InNvbWVrZXki",
-    "value": "eyJmb28iOiJiYXIifQ==",
+    "topic": "topicName",
+    "key": null,
+    "value": {
+      "foo": "bar"
+    },
     "partition": 0,
     "offset": 0
-  },
-  {
-    "topic": "test",
-    "key": null,
-    "value": "WyJmb28iLCJiYXIiXQ==",
-    "partition": 0,
-    "offset": 1
-  },
-  {
-    "topic": "test",
-    "key": null,
-    "value": "NTMuNQ==",
-    "partition": 0,
-    "offset": 2
   }
 ]
 ```
