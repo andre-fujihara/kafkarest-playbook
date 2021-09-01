@@ -113,7 +113,11 @@ Apesar de suportar modo distribuído, toda a comunicação é sincrona e os cons
 A Api conforme descrita acima possui muitos endpoints, é possivel configurar suas configurações de segurança e estão disponíveis na V2 e na V3
 https://docs.confluent.io/platform/current/kafka-rest/api.html
 
-## Listagem das informações do cluster
+# Cenário de uso para envio de uma mensagem
+
+## Recuperar o cluster_id
+
+O cluster_id pode ser recuperado através do endpoint **/v3/clusters** e é necessário para as alterações de configuração e cadastro.
 
 `
 http://localhost:8082/v3/clusters
@@ -160,102 +164,16 @@ http://localhost:8082/v3/clusters
 }
 ```
 
-## Listagem de informações de um dos broker
-
-`
-http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0
-`
-
-```JSON
-{
-  "kind": "KafkaBroker",
-  "metadata": {
-    "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0",
-    "resource_name": "crn:///kafka=eZ6H1ZP2QrShPSyQfjn-VQ/broker=0"
-  },
-  "cluster_id": "eZ6H1ZP2QrShPSyQfjn-VQ",
-  "broker_id": 0,
-  "host": "andre-ubuntu",
-  "port": 9092,
-  "rack": null,
-  "configs": {
-    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0/configs"
-  },
-  "partition_replicas": {
-    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0/partition-replicas"
-  }
-}
-```
-
-## Listagem de informações de um dos broker
-
-`
-http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0
-`
-
-```JSON
-{
-  "kind": "KafkaBroker",
-  "metadata": {
-    "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0",
-    "resource_name": "crn:///kafka=eZ6H1ZP2QrShPSyQfjn-VQ/broker=0"
-  },
-  "cluster_id": "eZ6H1ZP2QrShPSyQfjn-VQ",
-  "broker_id": 0,
-  "host": "andre-ubuntu",
-  "port": 9092,
-  "rack": null,
-  "configs": {
-    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0/configs"
-  },
-  "partition_replicas": {
-    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0/partition-replicas"
-  }
-}
-```
-
-## Informações das réplicas do broker
-
-`
-http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/0/partition-replicas
-`
-
-```JSON
-{
-  "kind": "KafkaReplicaList",
-  "metadata": {
-    "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0/partition-replicas",
-    "next": null
-  },
-  "data": []
-}
-```
-
-## Informações das réplicas do broker
-
-`
-http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics
-`
-
-```JSON
-{
-  "kind": "KafkaTopicList",
-  "metadata": {
-    "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics",
-    "next": null
-  },
-  "data": []
-}
-```
-
 ## Criação de tópicos
+A criação de tópicos é realizada através do endpoint **/v3/clusters/<cluster_id>/topics** e no conteúdo do body podemos enviar as informações do tópico.
+
 
 ```bash
 curl -X POST -H "Content-Type: application/json" \
 --data '{"topic_name": "teste"}' http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics | jq
 ```
 
-### Resposta:
+Resposta:
 
 ```JSON
 {
@@ -280,154 +198,18 @@ curl -X POST -H "Content-Type: application/json" \
 }
 ```
 
-### Listagem dos tópicos:
-
-`
-http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/0/partition-replicas
-`
-
-```JSON
-{
-  "kind": "KafkaTopicList",
-  "metadata": {
-    "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics",
-    "next": null
-  },
-  "data": [
-    {
-      "kind": "KafkaTopic",
-      "metadata": {
-        "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste",
-        "resource_name": "crn:///kafka=eZ6H1ZP2QrShPSyQfjn-VQ/topic=teste"
-      },
-      "cluster_id": "eZ6H1ZP2QrShPSyQfjn-VQ",
-      "topic_name": "teste",
-      "is_internal": false,
-      "replication_factor": 1,
-      "partitions": {
-        "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/partitions"
-      },
-      "configs": {
-        "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/configs"
-      },
-      "partition_reassignments": {
-        "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/partitions/-/reassignment"
-      }
-    }
-  ]
-}
-```
-
-## Descrição do tópico
-
-`
-http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste
-`
-
-```JSON
-{
-  "kind": "KafkaTopic",
-  "metadata": {
-    "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste",
-    "resource_name": "crn:///kafka=eZ6H1ZP2QrShPSyQfjn-VQ/topic=teste"
-  },
-  "cluster_id": "eZ6H1ZP2QrShPSyQfjn-VQ",
-  "topic_name": "teste",
-  "is_internal": false,
-  "replication_factor": 1,
-  "partitions": {
-    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/partitions"
-  },
-  "configs": {
-    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/configs"
-  },
-  "partition_reassignments": {
-    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/partitions/-/reassignment"
-  }
-}
-```
-
-## Descrição da partição
-
-`
-http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste
-`
-
-```JSON
-{
-  "kind": "KafkaPartitionList",
-  "metadata": {
-    "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/partitions",
-    "next": null
-  },
-  "data": [
-    {
-      "kind": "KafkaPartition",
-      "metadata": {
-        "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/partitions/0",
-        "resource_name": "crn:///kafka=eZ6H1ZP2QrShPSyQfjn-VQ/topic=teste/partition=0"
-      },
-      "cluster_id": "eZ6H1ZP2QrShPSyQfjn-VQ",
-      "topic_name": "teste",
-      "partition_id": 0,
-      "leader": {
-        "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/partitions/0/replicas/0"
-      },
-      "replicas": {
-        "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/partitions/0/replicas"
-      },
-      "reassignment": {
-        "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/partitions/0/reassignment"
-      }
-    }
-  ]
-}
-```
-
-## Descrição das réplicas
-
-`
-http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/partitions/0/replicas
-`
-
-```JSON
-{
-  "kind": "KafkaReplicaList",
-  "metadata": {
-    "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/partitions/0/replicas",
-    "next": null
-  },
-  "data": [
-    {
-      "kind": "KafkaReplica",
-      "metadata": {
-        "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/partitions/0/replicas/0",
-        "resource_name": "crn:///kafka=eZ6H1ZP2QrShPSyQfjn-VQ/topic=teste/partition=0/replica=0"
-      },
-      "cluster_id": "eZ6H1ZP2QrShPSyQfjn-VQ",
-      "topic_name": "teste",
-      "partition_id": 0,
-      "broker_id": 0,
-      "is_leader": true,
-      "is_in_sync": true,
-      "broker": {
-        "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/brokers/0"
-      }
-    }
-  ]
-}
-```
 
 ## Criação de consumer
+
+A criação de um consumer é realizada através do endpoint **consumers/<group_name>** e no conteúdo do body podemos enviar as informações do tópico.
 
 ```bash
 curl --location --request POST 'http://localhost:8082/consumers/testgroup' \
 --header 'Content-Type: application/vnd.kafka.v2+json' \
 --data-raw '{
   "name": "my_consumer",
-  "format": "binary",
+  "format": "json",
   "auto.offset.reset": "earliest",
-  "auto.commit.enable": "false"
 }'
 ```
 
@@ -440,7 +222,9 @@ curl --location --request POST 'http://localhost:8082/consumers/testgroup' \
 }
 ```
 
-## Subscripção em um tópico
+## Subscripção em tópicos
+
+A subscrição em um tópico é realizada através do endpoint **consumers/<group_name>/instances/<consumer_name>/subscription** e no conteúdo do body podemos enviar os tópicos.
 
 ```bash
 curl --location --request POST 'http://localhost:8082/consumers/testgroup/instances/my_consumer/subscription' \
@@ -454,7 +238,8 @@ curl --location --request POST 'http://localhost:8082/consumers/testgroup/instan
 
 ## Envio de mensagens
 
-É possivel enviar mais de uma mensagem por postagem como no exemplo abaixo:
+O envio de mensagens é realizado através do endpoint **topics/<topic_name>** e no conteúdo do body podemos enviar a mensagem.
+O conteúdo do JSON enviado ao tópico é um JSON preenchido no parâmetro **value** do body.
 
 ```bash
 curl -X POST -H "Content-Type: application/vnd.kafka.json.v2+json" \
@@ -463,20 +248,8 @@ curl -X POST -H "Content-Type: application/vnd.kafka.json.v2+json" \
         {
           "records": [
             {
-              "key": "somekey",
-              "value": {
-                "foo": "bar"
-              }
-            },
-            {
-              "value": [
-                "foo",
-                "bar"
-              ],
-              "partition": 0
-            },
-            {
-              "value": 53.5
+              "value": 
+                {"foo": "bar"}
             }
           ]
         }
@@ -495,32 +268,21 @@ http://localhost:8082/topics/test | jq
       "offset": 0,
       "error_code": null,
       "error": null
-    },
-    {
-      "partition": 0,
-      "offset": 1,
-      "error_code": null,
-      "error": null
-    },
-    {
-      "partition": 0,
-      "offset": 2,
-      "error_code": null,
-      "error": null
     }
   ],
   "key_schema_id": null,
   "value_schema_id": null
 }
+
 ```
 
 
 ## Recuperar o conteúdo do consumidor
 
-O conteúdo da mensagem está em Base64 pois não foi configurado o modo de encriptação ao criar o tópico.
 
 `
-http://localhost:8082/consumers/testgroup/instances/my_consumer/records
+curl --location --request GET 'http://localhost:8082/consumers/testgroup/instances/my_consumer/records' \
+--header 'Accept: application/vnd.kafka.json.v2+json'
 `
 
 ### Resposta
