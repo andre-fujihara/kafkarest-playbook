@@ -170,7 +170,8 @@ A criação de tópicos é realizada através do endpoint **/v3/clusters/<cluste
 
 ```bash
 curl -X POST -H "Content-Type: application/json" \
---data '{"topic_name": "teste"}' http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics | jq
+  --data '{"topic_name": "topicName"}' \
+  http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics | jq
 ```
 
 Resposta:
@@ -179,66 +180,66 @@ Resposta:
 {
   "kind": "KafkaTopic",
   "metadata": {
-    "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste",
-    "resource_name": "crn:///kafka=eZ6H1ZP2QrShPSyQfjn-VQ/topic=teste"
+    "self": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/topicName",
+    "resource_name": "crn:///kafka=eZ6H1ZP2QrShPSyQfjn-VQ/topic=topicName"
   },
   "cluster_id": "eZ6H1ZP2QrShPSyQfjn-VQ",
-  "topic_name": "teste",
+  "topic_name": "topicName",
   "is_internal": false,
   "replication_factor": 0,
   "partitions": {
-    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/partitions"
+    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/topicName/partitions"
   },
   "configs": {
-    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/configs"
+    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/topicName/configs"
   },
   "partition_reassignments": {
-    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/teste/partitions/-/reassignment"
+    "related": "http://localhost:8082/v3/clusters/eZ6H1ZP2QrShPSyQfjn-VQ/topics/topicName/partitions/-/reassignment"
   }
 }
-```
 
+```
 
 ## Criação de consumer
 
-A criação de um consumer é realizada através do endpoint **consumers/<group_name>** e no conteúdo do body podemos enviar as informações do tópico.
+A criação de um consumer é realizada através do endpoint **/consumers/<group_name>** e no conteúdo do body podemos enviar as informações do tópico.
 
 ```bash
-curl --location --request POST 'http://localhost:8082/consumers/testgroup' \
---header 'Content-Type: application/vnd.kafka.v2+json' \
---data-raw '{
-  "name": "my_consumer",
-  "format": "json",
-  "auto.offset.reset": "earliest",
-}'
+curl -X POST -H 'Content-Type: application/vnd.kafka.v2+json' \
+  'http://localhost:8082/consumers/testgroup' \
+    --data-raw '{
+    "name": "consumerName",
+    "format": "json",
+    "auto.offset.reset": "earliest"
+  }'
 ```
 
 ### Resposta
 
 ```JSON
 {
-  "instance_id": "my_consumer",
-  "base_uri": "http://localhost:8082/consumers/testgroup/instances/my_consumer"
+  "instance_id": "consumerName",
+  "base_uri": "http://localhost:8082/consumers/testgroup/instances/consumerName"
 }
 ```
 
 ## Subscripção em tópicos
 
-A subscrição em um tópico é realizada através do endpoint **consumers/<group_name>/instances/<consumer_name>/subscription** e no conteúdo do body podemos enviar os tópicos.
+A subscrição em um tópico é realizada através do endpoint **/consumers/<group_name>/instances/<consumer_name>/subscription** e no conteúdo do body podemos enviar os tópicos.
 
 ```bash
-curl --location --request POST 'http://localhost:8082/consumers/testgroup/instances/my_consumer/subscription' \
---header 'Content-Type: application/vnd.kafka.v2+json' \
---data-raw '{
-  "topics": [
-    "test"
-  ]
-}'
+curl -X POST -H 'Content-Type: application/vnd.kafka.v2+json' \
+  'http://localhost:8082/consumers/testgroup/instances/consumerName/subscription' \
+  --data-raw '{
+    "topics": [
+      "topicName"
+    ]
+  }'
 ```
 
 ## Envio de mensagens
 
-O envio de mensagens é realizado através do endpoint **topics/<topic_name>** e no conteúdo do body podemos enviar a mensagem.
+O envio de mensagens é realizado através do endpoint **/topics/<topic_name>** e no conteúdo do body podemos enviar a mensagem.
 O conteúdo do JSON enviado ao tópico é um JSON preenchido no parâmetro **value** do body.
 
 ```bash
@@ -254,7 +255,7 @@ curl -X POST -H "Content-Type: application/vnd.kafka.json.v2+json" \
           ]
         }
     ' \
-http://localhost:8082/topics/test | jq
+http://localhost:8082/topics/topicName | jq
 
 ```
 
@@ -281,7 +282,7 @@ http://localhost:8082/topics/test | jq
 
 
 `
-curl --location --request GET 'http://localhost:8082/consumers/testgroup/instances/my_consumer/records' \
+curl --location --request GET 'http://localhost:8082/consumers/testgroup/instances/consumerName/records' \
 --header 'Accept: application/vnd.kafka.json.v2+json'
 `
 
